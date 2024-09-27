@@ -13,7 +13,7 @@ if "%errorlevel%" == "0" (
 	pause >nul
 	exit
 )
-powershell -Command "if (Test-Connection -ComputerName google.com -Count 1 -Quiet) { exit 0 } else { exit 1 }"
+powershell -Command "if (Test-Connection -ComputerName github.com -Count 1 -Quiet) { exit 0 } else { exit 1 }"
 if "%errorlevel%" == "0" (
 	echo [90m[GITHUB RESPONDING...][0m
 	timeout /t 0 /nobreak >nul
@@ -47,17 +47,34 @@ if /i "%command%" == "$install gui-buttons" (
 	powershell.exe -Command "Write-Host '[100m[97mFunction installed to: [92m%systemroot%\System32[97m' -NoNewline"
 )
 
+:: APP INSTALL COMMANDS
+if /i "%command%" == "$app install chrome" (
+	PowerShell.exe -ExecutionPolicy Bypass -Command "irm 'https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B40D2092E-9681-5275-E300-7AF18C93F373%7D%26lang%3Dcs%26browser%3D4%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' -UseBasicParsing -OutFile '%temp%\chrome_setup.exe'"
+	start %temp%\chrome_setup.exe
+)
+
 ::OTHER COMMANDS
 if /i "%command%" == "$clear" cls
 if /i "%command%" == "$exit" (
 	echo Thanks for using CLSI! Goodbye.
 	echo.
+	timeout /t 0 /nobreak >nul
 	exit
+)
+
+::SETTING COMMANDS
+if /i "%command%" == "$check" (
+	powershell -Command "if (Test-Connection -ComputerName github.com -Count 1 -Quiet) { exit 0 } else { exit 1 }"
+	if "%errorlevel%" == "0" (
+		echo Github connection is working!
+	) else (
+		echo Failed to connect to github!
+	)
 )
 
 ::COMMAND NOT FOUND HANDLER
 echo.
-if not "%command%" == "$import" if not "%command%" == "$import base-gui" if not "%command%" == "$clear" if NOT "%command%" == "$install gui-buttons" (
+if not "%command%" == "$import" if not "%command%" == "$import base-gui" if not "%command%" == "$clear" if NOT "%command%" == "$install gui-buttons" if NOT "%command%" == "$check" if NOT "%command%" == "$app install chrome" if NOT "%command%" == "$interface swtich cmd" (
     echo Unrecognized or incompleted command: "%command%"
 )
 

@@ -61,6 +61,9 @@ if /i "%command%" == "$exit" (
 	timeout /t 0 /nobreak >nul
 	exit
 )
+if /i "%command%" == "$" call :help
+if /i "%command%" == "$help" call :help
+
 
 ::SETTING COMMANDS
 if /i "%command%" == "$check" (
@@ -72,10 +75,41 @@ if /i "%command%" == "$check" (
 	)
 )
 
-::COMMAND NOT FOUND HANDLER
-echo.
-if not "%command%" == "$import" if not "%command%" == "$import base-gui" if not "%command%" == "$clear" if NOT "%command%" == "$install gui-buttons" if NOT "%command%" == "$check" if NOT "%command%" == "$app install chrome" if NOT "%command%" == "$interface swtich cmd" (
-    echo Unrecognized or incompleted command: "%command%"
+::HARDER COMMANDS
+echo %command% | find "$start" >nul
+if "%errorlevel%" == "0" (
+    call :start
+    set start=1
 )
 
+
+::COMMAND NOT FOUND HANDLER
+echo.
+if not "%command%" == "$import" if not "%command%" == "$import base-gui" if not "%command%" == "$clear" if NOT "%command%" == "$install gui-buttons" if NOT "%command%" == "$check" if NOT "%command%" == "$app install chrome" if NOT "%command%" == "$" if NOT "%command%" == "$help" if NOT "%start%" == "1" (
+    echo Unrecognized or incompleted command: "%command%"
+)
 goto :command
+
+:start
+for /f "tokens=1,2 delims= " %%a in ("%command%") do (
+    set start=%%b
+)
+start "" "%start%"
+exit /b 0
+
+:help
+echo [46m[CLSI HELP][0m
+echo.
+echo [92mCommand list:[0m
+echo $import - script importation
+echo $install - function installation
+echo $app - app operations
+echo $clear - clear console
+echo $exit - exit
+echo $check - conectivity check
+echo.
+echo [95mCommand addons:[0m
+echo $import base-gui - basic gui menu
+echo $install gui-buttons - Gui buttons installation
+echo $app install chrome - google chrome installation
+exit /b 0

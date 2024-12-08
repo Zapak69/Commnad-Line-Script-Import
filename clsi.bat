@@ -14,7 +14,7 @@ if "%errorlevel%" == "0" (
 	pause >nul
 	exit
 )
-powershell -Command "if (Test-Connection -ComputerName google.com -Count 1 -Quiet) { exit 0 } else { exit 1 }"
+powershell -Command "if (Test-Connection -ComputerName github.com -Count 1 -Quiet) { exit 0 } else { exit 1 }"
 if "%errorlevel%" == "0" (
 	echo [90m[GITHUB RESPONDING...][0m
 	timeout /t 0 /nobreak >nul

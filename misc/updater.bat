@@ -16,5 +16,5 @@ echo X=MsgBox("Update complete!", 0+64, "UPDATER") >> %temp%\msg.vbs
 start %temp%\msg.vbs
 timeout /t 1 /nobreak >nul
 del %temp%\msg.vbs
-del %~dp0
+del %temp%\clsiupdate.bat
 exit

@@ -1,5 +1,5 @@
 @echo off
-set "ver=1.0.4.3.2.0"
+set "ver=1.0.5.0.0.0"
 echo Commnad Line Script Import %ver%
 if /i "%1" == "-version" exit /b 0
 timeout /t 0 /nobreak >nul
@@ -22,6 +22,12 @@ if "%errorlevel%" == "0" (
 	echo [41m[GITHUB FAILED CONECTION...][0m
 	pause >nul
 	exit
+)
+echo [96m[CHECKING FOR UPDATES...][0m
+PowerShell.exe -ExecutionPolicy Bypass -Command "irm 'https://raw.githubusercontent.com/Zapak69/Commnad-Line-Script-Import/refs/heads/main/ver' -UseBasicParsing -OutFile '%temp%\ver.txt'"
+type %temp%\ver.txt | find "%ver%"
+if NOT "%errorlevel%" == 0 (
+	goto updater
 )
 echo.
 timeout /t 0 /nobreak >nul
@@ -65,3 +71,20 @@ if not "%command%" == "$import" if not "%command%" == "$import base-gui" if not 
 )
 
 goto :command
+
+:updater
+echo [[96mNEW UPDATE FOUND!...][0m
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+	cls
+	echo.
+	echo [91m[ERROR :/][0m
+	echo.
+	echo Start script as admin to complete update!
+	pause >nul
+	exit
+)
+echo.
+echo [[96mUPDATING!...][0m
+PowerShell.exe -ExecutionPolicy Bypass -Command "irm 'https://raw.githubusercontent.com/Zapak69/Commnad-Line-Script-Import/refs/heads/main/misc/updater.bat' -UseBasicParsing -OutFile '%temp%\clsiupdate.bat'"
+start %temp%\clsiupdate.bat & exit
